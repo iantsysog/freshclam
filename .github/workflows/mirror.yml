@@ -76,7 +76,7 @@ jobs:
           git commit -m "feat: bump [${{ steps.reconcile.outputs.timestamp }}]"
           git push || true
       - name: Upload Pages artifact
-        uses: actions/upload-pages-artifact@v4
+        uses: actions/upload-pages-artifact@v5
         with:
           path: out
   deploy:
