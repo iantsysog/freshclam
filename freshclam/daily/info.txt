@@ -1,9 +1,9 @@
 File: out/daily.cvd
-Build time: 17 Apr 2026 06:24 +0000
-Version: 27974
+Build time: 18 Apr 2026 06:26 +0000
+Version: 27975
 Signatures: 355426
 Functionality level: 90
 Builder: svc.clamav-publisher
-MD5: 7e3478bf75b21cdea55fee06fdbb0151
-Digital signature: y03jmaR2k82IQiTZ1uDC9K1833e3ST7p3DWS5oAVybm3cduTU2coKwNx+lXR7p1GnXqJhxFXoNIeItz9+KxvhZZp6SMOS+6AKXLxFDWY9T7miHY8UVrW2PH2DamGE09pGAj7FI4ZqfE4+ZHyLDAgopzaQznQBkM7D+I2NnoFVPe
+MD5: 1f5a334efcc73d4aa4625228fb0e7943
+Digital signature: 2LjmNNdWR7M8nxkNQwF9Z+DCfldB0liwILbgsA2KCB2PuEkBLhnjYyYeqkfh478or4MyceANGzwxIZiIAJC7zbiSBYPNEOs6JtRVJcHcfbMzDNEA9mheNdLW5KM2rmqRj+Ga+6beDdKb94tPKPjKF+GYScljRoj+d/enWTAryQ
 Verification OK.
