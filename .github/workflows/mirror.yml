@@ -4,79 +4,41 @@ on:
     - cron: "15 0 * * *"
   workflow_dispatch:
 permissions:
-  contents: write
-  pages: write
-  id-token: write
+  contents: read
+  pages: read
 concurrency:
-  group: pages
-  cancel-in-progress: false
+  group: mirror-pages
+  cancel-in-progress: true
 jobs:
   build:
     runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: write
+      pages: write
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v6
-        with:
-          fetch-depth: 0
-          token: ${{ secrets.GITHUB_TOKEN }}
+        uses: actions/checkout@v4
       - name: Setup Python
-        uses: actions/setup-python@v6
+        uses: actions/setup-python@v5
         with:
           python-version: "3.11"
+          cache: pip
+      - name: Setup Nushell
+        uses: hustcer/setup-nu@v3
       - name: Install cvdupdate and clamav
         run: |
+          set -euo pipefail
           python -m pip install --upgrade pip
-          pip install cvdupdate
-          sudo apt-get update
-          sudo apt-get install -y clamav
-      - name: Reconcile DB
+          python -m pip install cvdupdate
+          sudo apt-get update -y
+          sudo apt-get install -y --no-install-recommends clamav
+      - name: Reconcile DB and unpack
         id: reconcile
         run: |
-          set -euo pipefail
-          mkdir -p out
-          cvd config set --dbdir out
-          cvd update
-          ls -lah out/
-          echo "timestamp=$(date -u +%Y-%m-%dT%H:%M:%SZ)" >> "$GITHUB_OUTPUT"
-      - name: Unpack CVD files
-        run: |
-          set -euo pipefail
-          mkdir -p freshclam
-          rm -rf freshclam/*
-          for cvd in out/*.cvd out/*.cld; do
-            [ -f "$cvd" ] || continue
-            name=$(basename "$cvd" .cvd)
-            name=$(basename "$name" .cld)
-            mkdir -p "freshclam/$name"
-            (cd "freshclam/$name" && sigtool --unpack="../../$cvd") || true
-            sigtool --info="$cvd" > "freshclam/$name/info.txt" || true
-          done
-          ls -lah freshclam/
-          cp out/dns.txt freshclam/
-      - name: Commit unpacked freshclam changes
-        run: |
-          set -euo pipefail
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          SIZE_LIMIT=52428800
-          while IFS= read -r file; do
-            size=$(stat -c%s "$file" 2>/dev/null || stat -f%z "$file" 2>/dev/null)
-            if [ "$size" -gt "$SIZE_LIMIT" ]; then
-              sha256=$(sha256sum "$file" 2>/dev/null | cut -d' ' -f1 || echo 'unknown')
-              rm "$file"
-              printf "oid sha256:%s\nsize %s\n" \
-                "$sha256" "$size" \
-                > "$file.placeholder"
-              git add "$file.placeholder"
-            else
-              git add "$file"
-            fi
-          done < <(find freshclam/ -type f)
-          git diff --cached --quiet && exit 0
-          git commit -m "feat: bump [${{ steps.reconcile.outputs.timestamp }}]"
-          git push || true
+          nu .github/mirror.nu
       - name: Upload Pages artifact
-        uses: actions/upload-pages-artifact@v5
+        uses: actions/upload-pages-artifact@v3
         with:
           path: out
   deploy:
@@ -84,8 +46,13 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     needs: build
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v5
+        uses: actions/deploy-pages@v4
