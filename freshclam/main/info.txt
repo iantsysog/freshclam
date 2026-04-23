@@ -1,4 +1,4 @@
-File: out/main.cvd
+File: /home/runner/work/freshclam/freshclam/out/main.cvd
 Build time: 16 Dec 2025 23:18 +0000
 Version: 63
 Signatures: 3287027

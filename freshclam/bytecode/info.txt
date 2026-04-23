@@ -1,4 +1,4 @@
-File: out/bytecode.cvd
+File: /home/runner/work/freshclam/freshclam/out/bytecode.cvd
 Build time: 11 Sep 2025 08:29 -0400
 Version: 339
 Signatures: 80
