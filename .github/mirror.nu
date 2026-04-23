@@ -84,7 +84,7 @@ def list_files_recursive [dir: string] {
 
 def enforce_size_limit [dir: string, size_limit_bytes: int] {
   for file_path in (list_files_recursive $dir) {
-    let size = (ls -l $file_path | get 0.size)
+    let size = (ls -l $file_path | get 0.size | into int)
     if $size > $size_limit_bytes {
       let hash = (sha256 $file_path)
       rm -f $file_path
