@@ -1,0 +1,57 @@
+name: Mirror
+on:
+  schedule:
+    - cron: "15 0 * * *"
+  workflow_dispatch:
+permissions:
+  contents: read
+  pages: read
+concurrency:
+  group: mirror-pages
+  cancel-in-progress: true
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: write
+      pages: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+      - name: Setup Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.11"
+      - name: Setup Nushell
+        uses: hustcer/setup-nu@v3
+      - name: Install cvdupdate and clamav
+        run: |
+          set -euo pipefail
+          python -m pip install --upgrade pip
+          python -m pip install cvdupdate
+          sudo apt-get update -y
+          sudo apt-get install -y --no-install-recommends clamav
+      - name: Reconcile DB and unpack
+        id: reconcile
+        run: |
+          nu .github/mirror.nu
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v5
+        with:
+          path: out
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    needs: build
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v5
