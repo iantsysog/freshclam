@@ -1,9 +1,9 @@
 File: /home/runner/work/freshclam/freshclam/out/daily.cvd
-Build time: 19 Aug 2026 06:24 +0000
-Version: 28097
-Signatures: 355605
+Build time: 20 Aug 2026 06:24 +0000
+Version: 28098
+Signatures: 355612
 Functionality level: 90
 Builder: svc.clamav-publisher
-MD5: d4e411eaf795e40a287d0ab5d11bd56f
-Digital signature: Z1JKK+Nv38ZWIs9p5aydXyMFOSgNhIAwcnnMDWyBVh0KiHXeIpiRUHeTh2HMn8YyOVQWZvge6miUoz+26UltNZicvis2amPOnf5qQfaF0PhQRcGx4kVGW7wt6etZaoueumnAnmzvkBMOJXuJeS/oBDGGValsovyKk2qZuzHTyNh
+MD5: 72f0e3a9c87c08d49fec074d7b93aceb
+Digital signature: uGqfPrZh+ghzXNjm3KZdgIpuIDYwyaoLrUqx6K56rQu2EO+WpOZWWecdxS7lXDHe3/5WGTOCQ2sw8INV6YLn2VyfGa8zOI46VNhjrsuezDQH1dYIZIVxNI6wjKieGymUEVdjt5XtTjPBxeI2wGr/wDzjTO61WV1lT2q4aGl8w/b
 Verification OK.
